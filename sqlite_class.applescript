@@ -1,27 +1,4 @@
 (*
-folder is created in ~/Library/Application Support/FOLDER_NAME
-
-@property SUPPORT_FOLDER : missing value
-@property FOLDER_NAME : missing value
-@property DATABASE_NAME : missing value
-@property FILE_PATH : missing value
-@property HEAD : missing value
-@property TAIL : quote
- 
-@function = createBaseFolder()
-@function = setHead()
-@function = sql_create_table(table_name, column_names_array)
-@function = sql_insert(table_name, the_values)
-@function = sql_update(table_name, the_fields, the_values, search_field, search_value)
-@function = sql_addColumn(table_name, col_name)
-@function = sql_select(column_names_array, table_name, search_field, search_value)
-@function = sql_select_all(table_name)
-@function = sql_select_all_where(table_name, search_field, search_value)
-@function = sql_delete_where(table_name, search_field, search_value)
-@function = sql_delete_every_row(table_name)
-@function = sql_delete_table(table_name)
-@function = executeSQL(sql_statement)
-
 Example Usage:
 # Change the path to location of this file
 set path_to_this_file to ((path to desktop as string) & "sqlite_class.scpt")
