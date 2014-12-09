@@ -1,7 +1,12 @@
 # Simple AppleScript wrapper for Sqlite3 #
 
+### Warning
+
+Personally, I would not use this file unless AppleScript was absolutely the only option I had.  
+That said, hope this helps anyone in that position.  
+
 The initial folder holding the database is created here.  
-    
+
     ~/Library/Application Support/FOLDER_NAME
 
 # Properties #
@@ -16,35 +21,35 @@ The initial folder holding the database is created here.
 # Functions #
 
 
-    @function = createBaseFolder()
-    @function = setHead()
-    @function = sql_create_table(table_name, column_names_array)
-    @function = sql_insert(table_name, the_values)
-    @function = sql_update(table_name, the_fields, the_values, search_field, search_value)
-    @function = sql_addColumn(table_name, col_name)
-    @function = sql_select(column_names_array, table_name, search_field, search_value)
-    @function = sql_select_all(table_name)
-    @function = sql_select_all_where(table_name, search_field, search_value)
-    @function = sql_delete_where(table_name, search_field, search_value)
-    @function = sql_delete_every_row(table_name)
-    @function = sql_delete_table(table_name)
-    @function = executeSQL(sql_statement)
+    createBaseFolder()
+    setHead()
+    create_table(table_name, column_names_array)
+    insert(table_name, the_values)
+    update(table_name, the_fields, the_values, search_field, search_value)
+    addColumn(table_name, col_name)
+    select_(column_names_array, table_name, search_field, search_value)
+    select_all(table_name)
+    select_all_where(table_name, search_field, search_value)
+    delete_where(table_name, search_field, search_value)
+    delete_every_row(table_name)
+    delete_table(table_name)
+    executeSQL(sql_statement)
 
 # Example Usage:
   Change the path to location of this file
   
     set path_to_this_file to ((path to desktop as string) & "sqlite_class.scpt")
-    set sql_class_script to load script file path_to_this_file
-    set sql_class to sql_class_script's SQLiteClass
-    set sql_class's FOLDER_NAME to "base_folder"
-    set sql_class's DATABASE_NAME to "data_base"
-    sql_class's createBaseFolder()
-    sql_class's setHead()
-    sql_class's sql_create_table("people", {"name", "age"})
-    sql_class's sql_insert("people", {"Tom", "44"})
-    sql_class's sql_insert("people", {"Annie", "34"})
-    sql_class's sql_select({"name", "age"}, "people", "name", "Annie")
-    
+    set script_file to load script file path_to_this_file
+    set SQLite to script_file's SQLite
+    set SQLite's FOLDER_NAME to "base_folder"
+    set SQLite's DATABASE_NAME to "data_base"
+    SQLite's createBaseFolder()
+    SQLite's setHead()
+    SQLite's create_table("people", {"name", "age"})
+    SQLite's insert("people", {"Tom", "44"})
+    SQLite's insert("people", {"Annie", "34"})
+    SQLite's select_({"name", "age"}, "people", "name", "Annie")
+
 # License #
 
 Copyright (c) 2011 Craig Williams

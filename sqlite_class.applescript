@@ -1,20 +1,20 @@
 (*
 Example Usage:
 # Change the path to location of this file
-set path_to_this_file to ((path to desktop as string) & "sqlite_class.scpt")
+set path_to_this_file to ((path to desktop as string) & "sqlite.scpt")
 set sql_class_script to load script file path_to_this_file
-set sql_class to sql_class_script's SQLiteClass
-set sql_class's FOLDER_NAME to "base_folder"
-set sql_class's DATABASE_NAME to "data_base"
-sql_class's createBaseFolder()
-sql_class's setHead()
-sql_class's sql_create_table("people", {"name", "age"})
-sql_class's sql_insert("people", {"Tom", "44"})
-sql_class's sql_insert("people", {"Annie", "34"})
-sql_class's sql_select({"name", "age"}, "people", "name", "Annie")
+set SQLite to sql_class_script's SQLite
+set SQLite's FOLDER_NAME to "base_folder"
+set SQLite's DATABASE_NAME to "data_base"
+SQLite's createBaseFolder()
+SQLite's setHead()
+SQLite's create_table("people", {"name", "age"})
+SQLite's insert("people", {"Tom", "44"})
+SQLite's insert("people", {"Annie", "34"})
+set theValues to SQLite's select_({"name", "age"}, "people", "name", "Annie")
 *)
 
-script SQLiteClass
+script SQLite
 	
 	property SUPPORT_FOLDER : missing value
 	property FOLDER_NAME : missing value
@@ -46,77 +46,77 @@ script SQLiteClass
 	#==============================================================
 	# Functions
 	#==============================================================
-	on sql_create_table(table_name, column_names_array)
+	on create_table(table_name, column_names_array)
 		set column_names_string to my commaSepQuotedString(column_names_array)
-		set sql_statement to "create table if not exists " & table_name & "(" & column_names_string & "); "
-		executeSQL(sql_statement)
-	end sql_create_table
+		set statement to "create table if not exists " & table_name & "(" & column_names_string & "); "
+		executeSQL(statement)
+	end create_table
 	
-	on sql_insert(table_name, the_values)
+	on insert(table_name, the_values)
 		try
 			set the_values to my commaSepQuotedString(the_values)
-			set sql_statement to "insert into " & table_name & " values(" & the_values & "); "
-			executeSQL(sql_statement)
+			set statement to "insert into " & table_name & " values(" & the_values & "); "
+			executeSQL(statement)
 		on error e
 			display dialog "There was an error while inserting." & return & e
 		end try
-	end sql_insert
+	end insert
 	
-	on sql_update(table_name, the_fields, the_values, search_field, search_value)
+	on update(table_name, the_fields, the_values, search_field, search_value)
 		repeat with i from 1 to count of the_fields
 			set this_item to item i of the_fields
-			set sql_statement to ("UPDATE " & table_name & " set " & this_item & " = '" & ¬
+			set statement to ("UPDATE " & table_name & " set " & this_item & " = '" & ¬
 				item i of the_values & "' WHERE " & search_field & " = '" & search_value & "'; " as string)
-			executeSQL(sql_statement)
+			executeSQL(statement)
 		end repeat
-	end sql_update
+	end update
 	
-	on sql_addColumn(table_name, col_name)
-		set sql_statement to ("ALTER table " & table_name & " add " & col_name & "; " as string)
-		executeSQL(sql_statement)
-	end sql_addColumn
+	on addColumn(table_name, col_name)
+		set statement to ("ALTER table " & table_name & " add " & col_name & "; " as string)
+		executeSQL(statement)
+	end addColumn
 	
-	on sql_select(column_names_array, table_name, search_field, search_value)
+	on select_(column_names_array, table_name, search_field, search_value)
 		set column_names_string to my commaSepString(column_names_array)
-		set sql_statement to ("SELECT " & column_names_string & " FROM " & table_name & ¬
+		set statement to ("SELECT " & column_names_string & " FROM " & table_name & ¬
 			" WHERE " & search_field & " = '" & search_value & "'; " as string)
-		return executeSQL(sql_statement)
-	end sql_select
+		return executeSQL(statement)
+	end select_
 	
-	on sql_select_all(table_name)
-		set sql_statement to ("SELECT * FROM " & table_name & " ; " as string)
-		set sql_execute to (executeSQL(sql_statement))
-		return my tidStuff(return, sql_execute)
-	end sql_select_all
+	on select_all(table_name)
+		set statement to ("SELECT * FROM " & table_name & " ; " as string)
+		set execute to (executeSQL(statement))
+		return my tidStuff(return, execute)
+	end select_all
 	
-	on sql_select_all_where(table_name, search_field, search_value)
-		set sql_statement to ("SELECT * FROM " & table_name & " WHERE " & ¬
+	on select_all_where(table_name, search_field, search_value)
+		set statement to ("SELECT * FROM " & table_name & " WHERE " & ¬
 			search_field & " = " & search_value & " ; " as string)
-		set sql_execute to (executeSQL(sql_statement))
-		return my tidStuff(return, sql_execute)
-	end sql_select_all_where
+		set execute to (executeSQL(statement))
+		return my tidStuff(return, execute)
+	end select_all_where
 	
-	on sql_delete_where(table_name, search_field, search_value)
-		set sql_statement to ("DELETE FROM " & table_name & " WHERE " & ¬
+	on delete_where(table_name, search_field, search_value)
+		set statement to ("DELETE FROM " & table_name & " WHERE " & ¬
 			search_field & " = " & search_value & " ; " as string)
-		executeSQL(sql_statement)
-	end sql_delete_where
+		executeSQL(statement)
+	end delete_where
 	
-	on sql_delete_every_row(table_name)
-		set sql_statement to ("DELETE FROM " & table_name & "; " as string)
-		executeSQL(sql_statement)
-	end sql_delete_every_row
+	on delete_every_row(table_name)
+		set statement to ("DELETE FROM " & table_name & "; " as string)
+		executeSQL(statement)
+	end delete_every_row
 	
-	on sql_delete_table(table_name)
-		set sql_statement to ("DELETE " & table_name & "; " as string)
-		executeSQL(sql_statement)
-	end sql_delete_table
+	on delete_table(table_name)
+		set statement to ("DELETE " & table_name & "; " as string)
+		executeSQL(statement)
+	end delete_table
 	
 	#==============================================================
 	# Private
 	#==============================================================
-	on executeSQL(sql_statement)
-		return (do shell script HEAD & sql_statement & TAIL)
+	on executeSQL(statement)
+		return (do shell script HEAD & statement & TAIL)
 	end executeSQL
 	
 	on tidStuff(paramHere, textHere)
